@@ -1,0 +1,542 @@
+:root {
+    --bg-color: #000000;
+    --text-primary: #FFFFFF;
+    --text-secondary: #AAAAAA;
+    --accent-red: #FF3B30;
+    --accent-green: #34C759;
+    --accent-blue: #0A84FF;
+    --accent-yellow: #FFCC00;
+    --accent-cyan: #32ADE6;
+    --panel-bg: #1C1C1E;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #111;
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.simulator-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+.device-bezel {
+    background: #222;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.8), inset 0 2px 5px rgba(255,255,255,0.1);
+    border: 2px solid #333;
+}
+
+/* 屏幕 320x170 放大2.5倍 = 800x425 */
+.screen {
+    width: 800px;
+    height: 425px;
+    background-color: var(--bg-color);
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: inset 0 0 15px rgba(0,0,0,1);
+}
+
+.view {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.view.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* --- View 0: Boot Screen --- */
+.boot-container {
+    display: flex;
+    width: 100%;
+    height: 85%;
+    align-items: center;
+    justify-content: center;
+}
+
+.boot-left {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-right: 20px;
+}
+
+.boot-machine {
+    max-height: 80%;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+.boot-right {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding-left: 20px;
+}
+
+.logo-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 250px;
+    height: 250px;
+}
+
+.boot-logo {
+    /* 竖版图片给横过来 */
+    transform: rotate(90deg);
+    max-width: 250px;
+    max-height: 250px;
+    object-fit: contain;
+}
+
+.boot-loading {
+    height: 15%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.loading-bar {
+    width: 400px;
+    height: 6px;
+    background-color: #333;
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+}
+
+.loading-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -50%;
+    width: 50%;
+    height: 100%;
+    background-color: var(--accent-blue);
+    border-radius: 3px;
+    animation: loading 2s infinite ease-in-out;
+}
+
+@keyframes loading {
+    0% { left: -50%; }
+    100% { left: 100%; }
+}
+
+.loading-text {
+    font-size: 14px;
+    color: var(--text-secondary);
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* --- View 1: Dashboard --- */
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background: linear-gradient(180deg, #1a1a1a 0%, #000 100%);
+    border-bottom: 1px solid #222;
+    height: 50px;
+}
+
+.mode-indicator {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.status-indicators {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.indicator {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background-color: #333;
+}
+
+.indicator.heater-on {
+    background-color: var(--accent-red);
+    box-shadow: 0 0 10px var(--accent-red);
+}
+
+.sim-badge {
+    background-color: var(--accent-yellow);
+    color: #000;
+    font-size: 12px;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.temp-display {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 20px 0;
+    flex: 1;
+}
+
+.temp-block {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.temp-label {
+    font-size: 16px;
+    color: var(--text-secondary);
+    letter-spacing: 1px;
+}
+
+.temp-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 80px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--text-primary);
+    text-shadow: 0 2px 10px rgba(255,255,255,0.2);
+}
+
+.temp-value.highlight {
+    color: var(--accent-cyan);
+    text-shadow: 0 2px 15px rgba(50,173,230,0.4);
+}
+
+.temp-target {
+    font-size: 16px;
+    color: var(--text-secondary);
+}
+
+#steam-target {
+    color: var(--accent-yellow);
+    font-weight: bold;
+}
+
+.chart-container {
+    height: 100px;
+    width: 100%;
+    padding: 0 10px;
+}
+
+/* --- View 2: Shot Timer --- */
+#view-timer {
+    background: radial-gradient(circle at center, #111 0%, #000 100%);
+    justify-content: center;
+    align-items: center;
+}
+
+.timer-header {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: var(--accent-cyan);
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.pulse {
+    animation: pulse 1.5s infinite alternate;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.6; }
+    100% { opacity: 1; }
+}
+
+.timer-display {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 160px;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-shadow: 0 0 30px rgba(255,255,255,0.5);
+    margin-top: 30px;
+}
+
+.timer-footer {
+    position: absolute;
+    bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+}
+
+.timer-hx-temp {
+    font-size: 28px;
+    color: var(--text-secondary);
+}
+
+#timer-hx {
+    color: var(--accent-cyan);
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: bold;
+}
+
+.timer-bar-container {
+    width: 600px;
+    height: 6px;
+    background-color: #222;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.timer-bar {
+    height: 100%;
+    width: 0%;
+    background-color: var(--accent-green);
+    transition: width 0.1s linear;
+}
+
+/* --- View 3: History --- */
+.history-header {
+    font-size: 24px;
+    padding: 15px 20px;
+    background: #111;
+    border-bottom: 1px solid #333;
+    font-weight: 600;
+}
+
+.history-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.history-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #1a1a1c;
+    padding: 15px 20px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    border-left: 4px solid var(--accent-cyan);
+}
+
+.history-item.empty-state {
+    border-left: none;
+    background: transparent;
+    justify-content: center;
+    color: var(--text-secondary);
+    font-style: italic;
+    margin-top: 50px;
+}
+
+.hist-time {
+    font-size: 18px;
+    color: var(--text-secondary);
+}
+
+.hist-duration {
+    font-size: 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: bold;
+    color: var(--text-primary);
+}
+
+.hist-temp {
+    font-size: 20px;
+    color: var(--accent-cyan);
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* --- 控制面板 --- */
+.controls-panel {
+    background: var(--panel-bg);
+    padding: 25px;
+    border-radius: 12px;
+    width: 800px;
+    border: 1px solid #333;
+}
+
+.controls-panel h3 {
+    margin-bottom: 10px;
+    color: #FFF;
+}
+
+.controls-panel p {
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.btn-group {
+    display: flex;
+    gap: 15px;
+}
+
+.control-btn {
+    flex: 1;
+    padding: 15px;
+    background: #333;
+    border: none;
+    border-radius: 8px;
+    color: #FFF;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.control-btn:hover {
+    background: #444;
+}
+
+.control-btn:active {
+    background: #555;
+    transform: scale(0.98);
+}
+
+.action-btn {
+    background: var(--accent-blue);
+}
+
+.action-btn:hover {
+    background: #1C90FF;
+}
+
+.tips {
+    margin-top: 20px;
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+/* --- V2.0 新增样式 --- */
+.lelit-capsule {
+    background: #DA121A;
+    color: #FFF;
+    font-weight: 800;
+    font-size: 46px;
+    letter-spacing: 6px;
+    padding: 16px 48px;
+    border-radius: 50px;
+}
+.machine-svg {
+    font-size: 42px;
+    font-weight: 800;
+    color: #DDD;
+}
+.badge-mini {
+    font-size: 11px;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+.timer-header {
+    width: calc(100% - 40px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.flow-badge {
+    background: #1C1C1E;
+    border: 1px solid #32ADE6;
+    color: #32ADE6;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 20px;
+}
+.timer-main-row {
+    display: flex;
+    align-items: baseline;
+    gap: 40px;
+    margin-top: 10px;
+}
+.timer-display {
+    font-size: 110px;
+    margin-top: 0;
+}
+.timer-display small, .weight-display small {
+    font-size: 32px;
+    color: #888;
+    margin-left: 4px;
+}
+.weight-display {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 95px;
+    font-weight: 700;
+    color: #FF9F0A;
+}
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.maint-tag {
+    font-size: 14px;
+    background: #2C2C2E;
+    color: #FFD60A;
+    padding: 4px 10px;
+    border-radius: 6px;
+}
+.net-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    padding: 20px;
+}
+.net-card {
+    background: #1A1A1C;
+    border: 1px solid #333;
+    border-radius: 10px;
+    padding: 20px;
+}
+.net-label {
+    color: #888;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+.net-val {
+    color: #32ADE6;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+.net-sub {
+    color: #AAA;
+    font-size: 13px;
+}

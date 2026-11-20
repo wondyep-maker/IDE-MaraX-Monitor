@@ -1,0 +1,7 @@
+*.pyc
+__pycache__/
+test_crop.jpg
+test_floodfill.jpg
+scratch_crop.py
+build/
+.DS_Store
