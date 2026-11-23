@@ -375,7 +375,9 @@ void pollMaraXHardware() {
   }
 
   if (!simulationMode) {
-    bool reedActive = (digitalRead(PIN_PUMP_REED) == LOW);
+    // 兼容普通干簧管 (LOW < 0.8V) 以及带串联 LED 指示灯的气缸磁性开关 CS1-U/F/G (闭合时压降约 1.8V，ADC < 3000)
+    int reedAdc = analogRead(PIN_PUMP_REED);
+    bool reedActive = (digitalRead(PIN_PUMP_REED) == LOW) || (reedAdc < 3000);
     if (reedActive && !isExtracting) {
       startExtraction(false);
     } else if (!reedActive && isExtracting && !holdToExtract && (millis() - extractionStartMs > 1000)) {
@@ -1221,7 +1223,8 @@ void setup() {
   digitalWrite(PIN_POWER_RELAY, HIGH);
   pinMode(PIN_PRESSURE_ADC, INPUT);
 
-  Serial1.begin(9600, SERIAL_8N1, PIN_MARAX_RX, PIN_MARAX_TX);
+  // Mara X (Gicar) 串口经光耦隔离输出，为反相 TTL 逻辑 (Inverted UART, 9600 8N1)
+  Serial1.begin(9600, SERIAL_8N1, PIN_MARAX_RX, PIN_MARAX_TX, true);
 
   prefs.begin("marax", false);
   totalShotsLifetime = prefs.getUInt("total_shots", 128);
